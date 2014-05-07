@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Modify Employee List</title>
+    </h:head>
+    <h:body style="padding: 60px;">
+        <b:navBar brand="Mayflower Travel" brandHref="ManagerPanel.xhtml" fixed="top" inverse="true">
+            <b:navbarLinks>
+                <b:navLink value="Manage Employees" href="modifyemployees.xhtml"/>
+                <b:dropMenu value="Reservations">
+                    <b:navLink value="By Customer/Flight" href="reservationhistory.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Revenue">
+                    <b:navLink value="By Date" href="salesreport.xhtml"/>
+                    <b:navLink value="By Flight/City/Customer" href="revenuelists.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Flights">
+                    <b:navLink value="All Flights"/>
+                    <b:navLink value="By Airport"/>
+                    <b:navLink value="Active Flights"/>
+                </b:dropMenu>
+            </b:navbarLinks>
+        </b:navBar>
+        <b:container>
+        <h2>Modify Employees</h2>
+        #{employeeList.populateEmployees()}
+        <b:row>
+            <b:column span="2"><h3>SSN</h3></b:column>
+            <b:column span="3"><h3>Name</h3></b:column>
+        </b:row>
+        <c:forEach var="e" items="#{employeeList.employees}">
+            <b:row>
+                <b:column span="1">#{e.SSN}</b:column>
+                <b:column span="3">#{e.firstName} #{e.lastName}</b:column>
+                <b:column span="2">
+                <h:form>
+                    <b:buttonGroup>
+                        <b:commandButton value="Edit" look="info">
+                            <f:param name="#{employeeList.selection}" value="#{e.SSN}" /> 
+                        </b:commandButton>
+                        <b:commandButton value="Delete" look="danger">
+                            <f:param name="#{employeeList.selection}" value="#{e.SSN}" /> 
+                        </b:commandButton>
+                    </b:buttonGroup>
+                </h:form>
+            </b:column>
+            </b:row>
+        </c:forEach>
+        <b:row>
+            <b:column span="3"><h:form><b:button value="Add Employee"  look="success"  /></h:form></b:column>
+        </b:row>
+
+    </b:container>
+    </h:body>
+</html>
+

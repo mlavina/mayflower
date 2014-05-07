@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Revenue per Flight, City, Customer</title>
+    </h:head>
+    <h:body style="padding: 60px;">
+        <b:navBar brand="Mayflower Travel" brandHref="ManagerPanel.xhtml" fixed="top" inverse="true">
+            <b:navbarLinks>
+                <b:navLink value="Manage Employees" href="modifyemployees.xhtml"/>
+                <b:dropMenu value="Reservations">
+                    <b:navLink value="By Customer/Flight" href="reservationhistory.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Revenue">
+                    <b:navLink value="By Date" href="salesreport.xhtml"/>
+                    <b:navLink value="By Flight/City/Customer" href="revenuelists.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Flights">
+                    <b:navLink value="All Flights"/>
+                    <b:navLink value="By Airport"/>
+                    <b:navLink value="Active Flights"/>
+                </b:dropMenu>
+            </b:navbarLinks>
+        </b:navBar>
+        <b:container>
+        <h2>Revenue per Flight, City, Customer</h2>
+        <h:form id="ID">
+            <b:inputText id="input" value="#{revenueList.input}">
+                <f:facet name="prepend">
+                    <b:commandButton value="Flight Number" action="#{revenueList.flightRecord()}"/>
+                    <b:commandButton value="City" action="#{revenueList.cityName()}"/>
+                    <b:commandButton value="Customer" action="#{revenueList.customerNumber()}"/>
+                </f:facet>
+            </b:inputText>
+        </h:form>
+        
+        <b:container>
+        <b:row>
+            <b:column span="2">Reservation#</b:column>
+            <b:column span="2">Revenue</b:column>
+        </b:row>
+        <b:row>
+            <c:forEach items="#{revenueList.revenue}" var="r">
+                <b:column span="1">#{r.resNum}</b:column>
+                <b:column span="1">#{r.revenue}</b:column>
+            </c:forEach>  
+        </b:row>
+        </b:container>
+        
+        </b:container>
+        
+    </h:body>
+</html>
+

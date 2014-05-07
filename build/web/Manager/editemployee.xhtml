@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Edit Employee</title>
+    </h:head>
+    <h:body style="padding: 60px;">
+        <b:navBar brand="Mayflower Travel" brandHref="ManagerPanel.xhtml" fixed="top" inverse="true">
+            <b:navbarLinks>
+                <b:navLink value="Manage Employees" href="modifyemployees.xhtml"/>
+                <b:dropMenu value="Reservations">
+                    <b:navLink value="By Customer/Flight" href="reservationhistory.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Revenue">
+                    <b:navLink value="By Date" href="salesreport.xhtml"/>
+                    <b:navLink value="By Flight/City/Customer" href="revenuelists.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Flights">
+                    <b:navLink value="All Flights"/>
+                    <b:navLink value="By Airport"/>
+                    <b:navLink value="Active Flights"/>
+                </b:dropMenu>
+            </b:navbarLinks>
+        </b:navBar>
+        <b:container>
+            <h2>Edit Employee</h2>
+        <b:panel title="FIRSTNAME LASTNAME" look="info">
+        <h:form id="editEmployee">
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputText value="SSN: "/>
+                <b:inputText id="id" value="#{employeeList.ssn}" />
+                <h:outputText value="Manager Status: "/>
+                <b:inputText id="manager" value="#{employee.isManager}" />
+                <h:outputText value="Start Date: "/>
+                <b:inputText id="date" value="#{employee.startDate}" />
+                <h:outputText value="Hourly Rate: "/>
+                <b:inputText id="rate" value="#{employee.hourlyRate}">
+                    <f:facet name="prepend">
+                        <h:outputText value="$" />
+                    </f:facet>
+                </b:inputText>
+                <h:outputText value="First Name: "/>
+                <b:inputText id="firstName" value="#{employee.firstName}" />
+                <h:outputText value="Last Name: "/>
+                <b:inputText id="lastName" value="#{employee.lastName}"/>
+                <h:outputText value="Address: "/>
+                <b:inputText id="address" value="#{employee.address}"/>
+                <h:outputText value="City: "/>
+                <b:inputText id="city" />
+                <h:outputText value="State: "/>
+                <b:inputText id="state" />
+                <h:outputText value="Zip Code: "/>
+                <b:inputText id="zip" />
+            </h:panelGrid>
+
+
+
+            <b:row>
+                <b:column><b:commandButton value="Submit" look="success"/></b:column>
+            </b:row>
+
+        </h:form>
+        </b:panel>
+        </b:container>
+    </h:body>
+</html>
+

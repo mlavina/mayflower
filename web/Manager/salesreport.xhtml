@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Sales Report</title>
+    </h:head>
+    <h:body style="padding: 60px;">
+        <b:navBar brand="Mayflower Travel" brandHref="ManagerPanel.xhtml" fixed="top" inverse="true">
+            <b:navbarLinks>
+                <b:navLink value="Manage Employees" href="modifyemployees.xhtml"/>
+                <b:dropMenu value="Reservations">
+                    <b:navLink value="By Customer/Flight" href="reservationhistory.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Revenue">
+                    <b:navLink value="By Date" href="salesreport.xhtml"/>
+                    <b:navLink value="By Flight/City/Customer" href="revenuelists.xhtml"/>
+                </b:dropMenu>
+                <b:dropMenu value="Flights">
+                    <b:navLink value="All Flights"/>
+                    <b:navLink value="By Airport"/>
+                    <b:navLink value="Active Flights"/>
+                </b:dropMenu>
+            </b:navbarLinks>
+        </b:navBar>
+        <b:container>
+        <h2>Obtain a sales report for a particular month!</h2>
+        <h:form id="reportMonth">
+        <b:row>
+            <b:column span="2">
+                <b:datepicker id="d1" value="#{salesReport.d1}"/>
+            </b:column>
+            <b:column span="2">
+                <b:datepicker id="d2" value="#{salesReport.d2}"/>
+            </b:column>
+        </b:row>
+        <b:row>
+            <b:column  span="1">
+                <b:commandButton value="View Report"  action="#{salesReport.makeReport()}" look="success"/>
+            </b:column>        
+        </b:row>
+        </h:form>
+        </b:container>
+
+
+                
+        <b:container>
+        <b:row>
+            <b:column span="1">Reservation#</b:column>
+            <b:column span="1">Booking Date</b:column>
+            <b:column span="1">Total Fare</b:column>
+            <b:column span="1">Booking Fee</b:column>
+            <b:column span="1">Employee SSN</b:column>
+            <b:column span="1">First Name</b:column>
+            <b:column span="1">Last Name</b:column>
+        </b:row>
+        <b:row>
+            <c:forEach items="#{salesReport.revenue}" var="s">
+                <b:column span="1">#{s.resNum}</b:column>
+                <b:column span="1">#{s.bookingDate}</b:column>
+                <b:column span="1">#{s.totalFare}</b:column>
+                <b:column span="1">#{s.bookingFee}</b:column>
+                <b:column span="1">#{s.SSN}</b:column>
+                <b:column span="1">#{s.firstName}</b:column>
+                <b:column span="1">#{s.lastName}</b:column>
+            </c:forEach>  
+        </b:row>
+            
+        </b:container>
+    </h:body>
+</html>
+
