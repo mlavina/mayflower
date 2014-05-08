@@ -1,4 +1,5 @@
 package managerStats;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -6,7 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 /**
- * Gives a history of all reservations, dictated either by a customer ID, or by a flight number.
+ * Gives a history of all reservations, dictated either by a customer ID, or by
+ * a flight number.
+ *
  * @author yv <yvonne@yvds.net>
  */
 @ManagedBean(name = "reshistory")
@@ -32,9 +35,7 @@ public class ReservationHistory {
     public void setCustomerID(int customerID) {
         this.customerID = customerID;
     }
-    
-    
-    
+
     public String getFlightID() {
         return flightID;
     }
@@ -50,7 +51,7 @@ public class ReservationHistory {
     public void setTextInput(String textInput) {
         this.textInput = textInput;
     }
-    
+
     public int getFlightNum() {
         return flightNum;
     }
@@ -75,26 +76,68 @@ public class ReservationHistory {
         return customerID;
     }
 
-    
     /**
      * Creates a new instance of ReservationHistory
      */
     public ReservationHistory() {
-        
+
     }
-    
-    public void flightRecord(){
+
+    public void flightSeatRecord() {
         reservations.removeAll(reservations);
         StringTokenizer st = new StringTokenizer(textInput);
-       try {
-        flightID = st.nextToken();
-        flightNum = Integer.parseInt(st.nextToken()); }
-        catch(Exception e) {
+        try {
+            flightID = st.nextToken();
+            flightNum = Integer.parseInt(st.nextToken());
+        } catch (Exception e) {
             /* uh oh bad input! */ }
         try {
             Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            /* uh oh no driver! */ }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                String sql = "    SELECT DISTINCT P.Id, P.FirstName, P.LastName FROM Reservation R, Includes I, ReservationPassenger RP, Person P WHERE I.AirlineID= ? AND I.FlightNo = ? AND I.ResrNo = R.ResrNo AND R.ResrNo = RP.ResrNo AND RP.Id = P.Id";
+                ps = con.prepareStatement(sql);
+                ps.setString(1, flightID);
+                ps.setInt(2, flightNum);
+                System.out.println(ps);
+                ps.execute();
+                rs = ps.getResultSet();
+                while (rs.next()) {
+                    reservations.add(new Reservation(rs.getString("FirstName"), rs.getString("LastName"),rs.getInt("Id")));
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        catch (ClassNotFoundException e) {
+    }
+
+ 
+
+    public void flightRecord() {
+        reservations.removeAll(reservations);
+        StringTokenizer st = new StringTokenizer(textInput);
+        try {
+            flightID = st.nextToken();
+            flightNum = Integer.parseInt(st.nextToken());
+        } catch (Exception e) {
+            /* uh oh bad input! */ }
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
             /* uh oh no driver! */ }
         PreparedStatement ps = null;
         Connection con = null;
@@ -114,38 +157,34 @@ public class ReservationHistory {
                 ps.execute();
                 rs = ps.getResultSet();
                 while (rs.next()) {
-                    reservations.add(new Reservation(rs.getInt("ResrNo"), rs.getDate("ResrDate"), rs.getDouble("BookingFee"), 
-                            rs.getDouble("TotalFare"), rs.getInt("RepSSN"), rs.getString("FirstName"), rs.getString("LastName") ));
+                    reservations.add(new Reservation(rs.getInt("ResrNo"), rs.getDate("ResrDate"), rs.getDouble("BookingFee"),
+                            rs.getDouble("TotalFare"), rs.getInt("RepSSN"), rs.getString("FirstName"), rs.getString("LastName")));
                 }
 
             }
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
-        } 
-        finally {
+        } finally {
             try {
                 con.close();
                 ps.close();
-            } 
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } 
+        }
     }
-    
-    public void customerRecord(){
+
+    public void customerRecord() {
         reservations.removeAll(reservations);
         StringTokenizer st = new StringTokenizer(textInput);
-       try {
-        firstName = st.nextToken();
-        lastName = st.nextToken(); }
-        catch(Exception e) {
+        try {
+            firstName = st.nextToken();
+            lastName = st.nextToken();
+        } catch (Exception e) {
             /* uh oh bad input! */ }
         try {
             Class.forName("com.mysql.jdbc.Driver");
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             /* uh oh no driver! */ }
         PreparedStatement ps = null;
         Connection con = null;
@@ -161,32 +200,29 @@ public class ReservationHistory {
                 ps = con.prepareStatement(sql);
                 ps.setString(1, firstName);
                 ps.setString(2, lastName);
-                
+
                 ps.execute();
                 rs = ps.getResultSet();
                 while (rs.next()) {
-                    reservations.add(new Reservation(rs.getInt("ResrNo"), rs.getDate("ResrDate"), rs.getDouble("BookingFee"), 
-                            rs.getDouble("TotalFare"), rs.getInt("RepSSN"), rs.getString("FirstName"), rs.getString("LastName") ));
+                    reservations.add(new Reservation(rs.getInt("ResrNo"), rs.getDate("ResrDate"), rs.getDouble("BookingFee"),
+                            rs.getDouble("TotalFare"), rs.getInt("RepSSN"), rs.getString("FirstName"), rs.getString("LastName")));
                 }
 
             }
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
-        } 
-        finally {
+        } finally {
             try {
                 con.close();
                 ps.close();
-            } 
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } 
-        
+        }
+
     }
-    
-     public static class Reservation {
+
+    public static class Reservation {
 
         int resNum;
         Date resDate;
@@ -195,6 +231,7 @@ public class ReservationHistory {
         int repSSN;
         String firstName;
         String lastName;
+        int acctNo;
 
         public Reservation(int resNum, Date resDate, double bookingFee, double totalFare, int repSSN, String firstName, String lastName) {
             this.resNum = resNum;
@@ -206,6 +243,22 @@ public class ReservationHistory {
             this.lastName = lastName;
         }
 
+        public Reservation(String firstName, String lastName, int acctNo) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.acctNo = acctNo;
+        }
+
+        
+        public int getAcctNo() {
+            return acctNo;
+        }
+
+        public void setAcctNo(int acctNo) {
+            this.acctNo = acctNo;
+        }
+
+        
         public int getResNum() {
             return resNum;
         }
@@ -261,14 +314,13 @@ public class ReservationHistory {
         public void setLastName(String lastName) {
             this.lastName = lastName;
         }
-        
 
         @Override
         public String toString() {
-            return firstName+" "+lastName+" "+resNum+" "+resDate+" $"+totalFare+" $"+bookingFee+" "+repSSN;
+            return firstName + " " + lastName + " " + resNum + " " + resDate + " $" + totalFare + " $" + bookingFee + " " + repSSN;
 
         }
-        
-     }
-    
+
+    }
+
 }

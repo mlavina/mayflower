@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package managerStats;
 
 import java.sql.Connection;
@@ -21,50 +20,52 @@ import javax.inject.Named;
  *
  * @author Michael
  */
-@Named (value="flightList")
+@Named(value = "flightList")
 @Dependent
 public class FlightList {
-     private static final ArrayList<Flight> flights = new ArrayList<Flight>();
-      private static String airlineID;
-        private static int flightNo;
-        private static int numSeats;
-        private static String daysOperating;
-        private static int minLength;
-        private static int maxLength;
+
+    private static final ArrayList<Flight> flights = new ArrayList<Flight>();
+    private static String airlineID;
+    private static int flightNo;
+    private static int numSeats;
+    private static String daysOperating;
+    private static int minLength;
+    private static int maxLength;
+
     /**
      * Creates a new instance of FlightList
      */
     public FlightList() {
     }
 
-    public  ArrayList<Flight> getFlights() {
+    public ArrayList<Flight> getFlights() {
         return flights;
     }
 
-    public  String getAirlineID() {
+    public String getAirlineID() {
         return airlineID;
     }
 
-    public  int getFlightNo() {
+    public int getFlightNo() {
         return flightNo;
     }
 
-    public  int getNumSeats() {
+    public int getNumSeats() {
         return numSeats;
     }
 
-    public  String getDaysOperating() {
+    public String getDaysOperating() {
         return daysOperating;
     }
 
-    public  int getMinLength() {
+    public int getMinLength() {
         return minLength;
     }
 
-    public  int getMaxLength() {
+    public int getMaxLength() {
         return maxLength;
     }
-    
+
     public void makeFlights() {
         flights.removeAll(flights);
         try {
@@ -107,17 +108,73 @@ public class FlightList {
                 e.printStackTrace();
             }
         }
-        //reservations.add(new TableReservation(555, new Date(141224241), 22.4, 12.1,11111));
-        //reserveArray = reservations.toArray(reserveArray);
+
     }
+
+    public void makeActiveFlights() {
+        flights.removeAll(flights);
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                con.setAutoCommit(false);
+                String sql;
+                try {
+                    sql = "CREATE VIEW FlightReservation(AirlineID, FlightNo, ResrCount) AS SELECT I.AirlineID, I.FlightNo, COUNT(DISTINCT I.ResrNo) FROM Includes I GROUP BY I.AirlineID, I.FlightNo";
+                    ps = con.prepareStatement(sql);
+                    ps.execute();
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                }
+
+                try {
+                    sql = "SELECT * FROM FlightReservation\n"
+                            + "WHERE ResrCount >= (SELECT MAX(ResrCount) FROM FlightReservation)";
+                    ps = con.prepareStatement(sql);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    while (rs.next()) {
+                        flights.add(new Flight(rs.getString("AirlineID"), rs.getInt("FlightNo"), rs.getInt("NoOfSeats"), rs.getString("DaysOperating"), rs.getInt("MinLengthOfStay"), rs.getInt("MaxLengthOfStay")));
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.setAutoCommit(true);
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     public class Flight {
- String airlineID;
+
+        String airlineID;
         int flightNo;
         int numSeats;
         String daysOperating;
         int minLength;
         int maxLength;
-       
 
         public String getAirlineID() {
             return airlineID;
@@ -167,16 +224,14 @@ public class FlightList {
             this.maxLength = maxLength;
         }
 
-        public Flight(String airLineID, int flightNo, int numSeats, String daysOperating, int minLength, int maxLength){
-            this.airlineID=airLineID;
-            this.flightNo=flightNo;
-            this.numSeats=numSeats;
+        public Flight(String airLineID, int flightNo, int numSeats, String daysOperating, int minLength, int maxLength) {
+            this.airlineID = airLineID;
+            this.flightNo = flightNo;
+            this.numSeats = numSeats;
             this.daysOperating = daysOperating;
-            this.minLength=minLength;
-            this.maxLength=maxLength;
+            this.minLength = minLength;
+            this.maxLength = maxLength;
         }
-
-      
 
     }
 }

@@ -30,22 +30,28 @@
             <h:form id="ID">
                 <b:inputText id="input" value="#{revenueList.input}">
                     <f:facet name="prepend">
-                        <b:commandButton value="Flight Number" action="#{revenueList.flightRecord()}"/>
-                        <b:commandButton value="City" action="#{revenueList.cityName()}"/>
-                        <b:commandButton value="Customer" action="#{revenueList.customerNumber()}"/>
+                        <b:commandButton value="City" action="#{revenueList.airlineName()}"/>
                     </f:facet>
                 </b:inputText>
             </h:form>
 
             <b:container>
                 <b:row>
-                    <b:column span="2">Reservation#</b:column>
-                    <b:column span="2">Revenue</b:column>
+                    <b:column span="2">Airline ID</b:column>
+                    <b:column span="2">Flight#</b:column>
+                    <b:column span="2"># of Seats</b:column>
+                    <b:column span="2">Days Operating</b:column>
+                    <b:column span="2">Min Length of Stay</b:column>
+                    <b:column span="2">Max Length of Stay</b:column>
                 </b:row>
                 <c:forEach items="#{revenueList.revenue}" var="r">
                     <b:row>
-                        <b:column span="2">#{r.resNum}</b:column>
-                        <b:column span="2">#{r.revenue}</b:column>
+                        <b:column span="2">#{r.airlineId}</b:column>
+                        <b:column span="2">#{r.flightNo}</b:column>
+                        <b:column span="2">#{r.noSeats}</b:column>
+                        <b:column span="2">#{r.daysOperating}</b:column>
+                        <b:column span="2">#{r.minLength}</b:column>
+                        <b:column span="2">#{r.maxLength}</b:column>
                     </b:row>
                 </c:forEach>  
 

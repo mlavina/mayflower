@@ -232,6 +232,47 @@ public class RevenueList {
         
     }
     
+    public void airlineName(){
+        revenue.removeAll(revenue);
+        String airlineName = input;
+         try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch (ClassNotFoundException e) {
+            /* uh oh no driver! */ }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+                try {
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                String sql = "SELECT DISTINCT F.* FROM Flight F, Leg L, Airport A WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo AND (L.DepAirportId = A.Id OR L.ArrAirportId = A.Id) AND A.Name = ?"; 
+                ps = con.prepareStatement(sql);
+                ps.setString(1, airlineName);
+                ps.execute();
+                rs = ps.getResultSet();
+                while (rs.next()) {
+                    revenue.add(new Revenue(rs.getString("AirlineID"), rs.getInt("FlightNo"), rs.getInt("NoOfSeats")
+                    , rs.getString("DaysOperating"), rs.getInt("MinLengthOfStay"), rs.getInt("MaxLengthofStay")));
+                }
+
+            }
+        } 
+        catch (Exception e) {
+            System.out.println(e);
+        } 
+        finally {
+            try {
+                con.close();
+                ps.close();
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        } 
+        
+    }
+    
     /**
      * Creates a new instance of RevenueList
      */
@@ -241,11 +282,78 @@ public class RevenueList {
      public static class Revenue {
          int resNum;
          double revenue;
+         String airlineId;
+         int flightNo;
+         int noSeats;
+         String daysOperating;
+         int minLength;
+         int maxLength;
+         
+         
          
          public Revenue(int resNum, double revenue){
              this.resNum = resNum;
              this.revenue = revenue;
          }
+
+        public Revenue(String airlineId, int flightNo, int noSeats, String daysOperating, int minLength, int maxLength) {
+            this.airlineId = airlineId;
+            this.flightNo = flightNo;
+            this.noSeats = noSeats;
+            this.daysOperating = daysOperating;
+            this.minLength = minLength;
+            this.maxLength = maxLength;
+        }
+
+        public String getAirlineId() {
+            return airlineId;
+        }
+
+        public void setAirlineId(String airlineId) {
+            this.airlineId = airlineId;
+        }
+
+        public int getFlightNo() {
+            return flightNo;
+        }
+
+        public void setFlightNo(int flightNo) {
+            this.flightNo = flightNo;
+        }
+
+        public int getNoSeats() {
+            return noSeats;
+        }
+
+        public void setNoSeats(int noSeats) {
+            this.noSeats = noSeats;
+        }
+
+        public String getDaysOperating() {
+            return daysOperating;
+        }
+
+        public void setDaysOperating(String daysOperating) {
+            this.daysOperating = daysOperating;
+        }
+
+        public int getMinLength() {
+            return minLength;
+        }
+
+        public void setMinLength(int minLength) {
+            this.minLength = minLength;
+        }
+
+        public int getMaxLength() {
+            return maxLength;
+        }
+
+        public void setMaxLength(int maxLength) {
+            this.maxLength = maxLength;
+        }
+         
+         
 
         public int getResNum() {
             return resNum;
