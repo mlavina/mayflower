@@ -24,17 +24,14 @@ import javax.inject.Named;
 @Dependent
 public class SalesReport {
 
-    private ArrayList<Revenue> revenue = new ArrayList<Revenue>();
-    private Date d1;
-    private Date d2;
+    private static final ArrayList<Revenue> revenue = new ArrayList<Revenue>();
+    private static Date d1;
+    private static Date d2;
 
     public ArrayList<Revenue> getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(ArrayList<Revenue> revenue) {
-        this.revenue = revenue;
-    }
     
 
     public Date getD2() {
@@ -60,7 +57,7 @@ public class SalesReport {
     
     public void makeReport(){
 
-        revenue = new ArrayList<Revenue>();
+        revenue.removeAll(revenue);
         
         try { 
             Class.forName("com.mysql.jdbc.Driver");
@@ -82,7 +79,7 @@ public class SalesReport {
                ps = con.prepareStatement(sql);
                ps.setDate(1, new java.sql.Date(d1.getTime()));
                ps.setDate(2, new java.sql.Date(d2.getTime()));
-               ps.executeQuery();
+               ps.execute();
                rs = ps.getResultSet();
                while(rs.next()){
                    revenue.add( new Revenue(

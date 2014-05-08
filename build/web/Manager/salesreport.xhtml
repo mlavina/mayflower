@@ -56,8 +56,8 @@
             <b:column span="1">First Name</b:column>
             <b:column span="1">Last Name</b:column>
         </b:row>
-        <b:row>
             <c:forEach items="#{salesReport.revenue}" var="s">
+                <b:row>
                 <b:column span="1">#{s.resNum}</b:column>
                 <b:column span="1">#{s.bookingDate}</b:column>
                 <b:column span="1">#{s.totalFare}</b:column>
@@ -65,8 +65,8 @@
                 <b:column span="1">#{s.SSN}</b:column>
                 <b:column span="1">#{s.firstName}</b:column>
                 <b:column span="1">#{s.lastName}</b:column>
+                </b:row>
             </c:forEach>  
-        </b:row>
             
         </b:container>
     </h:body>
