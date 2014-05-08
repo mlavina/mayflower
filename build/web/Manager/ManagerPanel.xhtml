@@ -42,27 +42,33 @@
                     Welcome back to your control panel!
                     Please select your action from the toolbar above,
                     or take a look at the current revenue and flight stats!
-                    A bit clueless? Don't forget about the <strong>Help Menu</strong>.
+                    A bit clueless? Don't forget about the <a href="HelpMenu.xhtml"><strong>Help Menu</strong></a>.
                 </b:column>
                 <b:column span="5">
-                    <b:panel title="Big Money Records!" look="info">
-                        <h:panelGrid columns="2" cellpadding="5">
-                            <h:outputText value="Employee:"/>
-                            <h:outputText value=" "/>
-                            <h:outputText value="#{highestRevenue.employeeID}"/>
-                            <h:outputText value="#{highestRevenue.employeeRevenue}"/>
-                            <h:outputText value="Customer:"/>
-                            <h:outputText value=" "/>
-                            <h:outputText value="#{highestRevenue.custFirstName} #{highestRevenue.custLastName} "/>
-                            <h:outputText value=" #{highestRevenue.customerRevenue}"/>
-                        </h:panelGrid>
+                    <b:panel title="Highest Generated Revenue" look="info">
+                        <b:container>
+                            <b:row>
+                                <b:column span="2">Employee: </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column span="2">#{highestRevenue.employeeID}</b:column>
+                                <b:column span="2">#{highestRevenue.employeeRevenue}</b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column span="2">Customer:  </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column span="2">#{highestRevenue.custFirstName} #{highestRevenue.custLastName}</b:column>
+                                <b:column span="2">#{highestRevenue.customerRevenue}</b:column>
+                            </b:row>
+                        </b:container>
                     </b:panel>
                 </b:column>
             </b:row>
 
             <b:row>
                 <b:column span="5">
-                    <b:panel title="On-Time Flights!">
+                    <b:panel title="On-Time Flights">
                         #{flightList.onTimeFlights()}
                         <b:container>
                             <b:row>
@@ -79,7 +85,7 @@
                     </b:panel>
                 </b:column>
                 <b:column span="5">
-                    <b:panel title="Delayed Flights!">
+                    <b:panel title="Delayed Flights">
                         #{flightList.delayedFlights()}
                         <b:container>
                             <b:row>

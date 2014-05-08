@@ -208,7 +208,6 @@ public class RevenueList {
                         + "AND L.ArrAirportID = A.ID AND A.City = ?"; 
                 ps = con.prepareStatement(sql);
                 ps.setString(1, city);
-                System.out.println(ps);
                 ps.execute();
                 rs = ps.getResultSet();
                 while (rs.next()) {
