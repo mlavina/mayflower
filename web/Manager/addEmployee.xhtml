@@ -9,19 +9,20 @@
     </h:head>
     <h:body style="padding: 60px;">
         <b:navBar brand="Mayflower Travel" brandHref="ManagerPanel.xhtml" fixed="top" inverse="true">
-            <b:navbarLinks>
+           <b:navbarLinks>
                 <b:navLink value="Manage Employees" href="modifyemployees.xhtml"/>
                 <b:dropMenu value="Reservations">
                     <b:navLink value="By Customer/Flight" href="reservationhistory.xhtml"/>
+                    <b:navLink value="Reserved Seats by Flight" href="reservedSeats.xhtml" />
                 </b:dropMenu>
                 <b:dropMenu value="Revenue">
                     <b:navLink value="By Date" href="salesreport.xhtml"/>
                     <b:navLink value="By Flight/City/Customer" href="revenuelists.xhtml"/>
                 </b:dropMenu>
                 <b:dropMenu value="Flights">
-                    <b:navLink value="All Flights"/>
-                    <b:navLink value="By Airport"/>
-                    <b:navLink value="Active Flights"/>
+                    <b:navLink value="All Flights" href="allFlights.xhtml"/>
+                    <b:navLink value="By Airport" href="airportFlight.xhtml" />
+                    <b:navLink value="Active Flights"  href="allFlights.xhtml"/>
                 </b:dropMenu>
             </b:navbarLinks>
         </b:navBar>
