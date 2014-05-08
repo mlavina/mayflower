@@ -66,6 +66,96 @@ public class FlightList {
         return maxLength;
     }
 
+    public void delayedFlights() {
+        flights.removeAll(flights);
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                con.setAutoCommit(false);
+                try {
+                    String sql = "SELECT * FROM Flight F WHERE EXISTS ( SELECT * FROM Leg L WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo AND (ActualArrTime > ArrTime OR ActualDepTime > DepTime))";
+                    ps = con.prepareStatement(sql);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    while (rs.next()) {
+                        flights.add(new Flight(rs.getString("AirlineID"), rs.getInt("FlightNo"), rs.getInt("NoOfSeats"), rs.getString("DaysOperating"), rs.getInt("MinLengthOfStay"), rs.getInt("MaxLengthOfStay")));
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.setAutoCommit(true);
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    
+     public void onTimeFlights() {
+        flights.removeAll(flights);
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                con.setAutoCommit(false);
+                try {
+                    String sql = "SELECT * FROM Flight F WHERE NOT EXISTS ( SELECT * FROM Leg L WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo AND (ActualArrTime > ArrTime OR ActualDepTime > DepTime))";
+                    ps = con.prepareStatement(sql);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    while (rs.next()) {
+                        flights.add(new Flight(rs.getString("AirlineID"), rs.getInt("FlightNo"), rs.getInt("NoOfSeats"), rs.getString("DaysOperating"), rs.getInt("MinLengthOfStay"), rs.getInt("MaxLengthOfStay")));
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.setAutoCommit(true);
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+     
     public void makeFlights() {
         flights.removeAll(flights);
         try {
@@ -233,5 +323,10 @@ public class FlightList {
             this.maxLength = maxLength;
         }
 
+        @Override
+        public String toString() {
+            return "Flight{" + "airlineID=" + airlineID + ", flightNo=" + flightNo + ", numSeats=" + numSeats + ", daysOperating=" + daysOperating + ", minLength=" + minLength + ", maxLength=" + maxLength + '}';
+        }
+        
     }
 }

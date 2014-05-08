@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.Dependent;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 /**
@@ -38,6 +39,49 @@ public class EmployeeList {
     private static String city;
     private static String state;
     private static int zip;
+    private static int dBName;
+    private static int dBPassword;
+    private static int name;
+    private static int password;
+    private String loggedIn;
+    private int isManager;
+
+    public String getLoggedIn() {
+        return (String) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("loggedIn");
+    }
+
+    public int getdBName() {
+        return dBName;
+    }
+
+    public void setdBName(int dBName) {
+        EmployeeList.dBName = dBName;
+    }
+
+    public int getdBPassword() {
+        return dBPassword;
+    }
+
+    public void setdBPassword(int dBPassword) {
+        EmployeeList.dBPassword = dBPassword;
+    }
+
+    public int getName() {
+        return name;
+    }
+
+    public void setName(int name) {
+        EmployeeList.name = name;
+    }
+
+    public int getPassword() {
+        return password;
+    }
+
+    public void setPassword(int password) {
+        EmployeeList.password = password;
+    }
 
     public int getSSN() {
         return SSN;
@@ -146,6 +190,65 @@ public class EmployeeList {
 
     }
 
+    public void dbData(int uName) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        if (name >= 0) {
+            PreparedStatement ps = null;
+            Connection con = null;
+            ResultSet rs = null;
+
+            try {
+                con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+                if (con != null) {
+                    con.setAutoCommit(false);
+                    try {
+                        String sql = "select id,ssn,ismanager from employee where ismanager=1 and id = '"
+                                + uName + "'";
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+                        rs.next();
+                        dBName = rs.getInt("id");
+                        dBPassword = rs.getInt("ssn");
+                        isManager = rs.getInt("ismanager");
+                        con.commit();
+                    } catch (Exception e) {
+                        con.rollback();
+                    }
+                }
+            } catch (SQLException sqle) {
+                sqle.printStackTrace();
+            } finally {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+    public String login() {
+        dbData(name);
+        if (name == dBName && password == dBPassword && isManager==1) {
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap().put("loggedIn", "valid");
+            loggedIn = "valid";
+            return "valid";
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("loggedIn","invalid");
+            return "invalid";
+        }
+    }
+
     public void addEmployee() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -166,7 +269,7 @@ public class EmployeeList {
                 try {
                     ps.execute();
                     rs = ps.getResultSet();
-                    if(rs.next()){
+                    if (rs.next()) {
                         id = rs.getInt(1) + 1;
                         newSSN = rs.getInt(2) + 1;
                     }
@@ -175,8 +278,6 @@ public class EmployeeList {
                     con.rollback();
                 }
 
-               
-                
                 sql = "INSERT INTO Person VALUES (?, ?, ?, ?, ?, ?, ?)";
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, id);
@@ -193,8 +294,7 @@ public class EmployeeList {
                 } catch (Exception e) {
                     con.rollback();
                 }
-                
-                
+
                 sql = "INSERT INTO Employee VALUES (?, ?, ?, ?,?)";
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, id);

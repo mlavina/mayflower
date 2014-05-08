@@ -2,11 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:b="http://bootsfaces.net/ui"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>Manager Panel</title>
     </h:head>
     <h:body style="padding: 60px;">
+        <script type="text/javascript">
+
+                    if ("#{employeeList.loggedIn}" != "valid") {
+                window.location.replace("../home.xhtml");
+            }
+
+        </script>
         <b:navBar brand="Mayflower Travel" brandHref="ManagerPanel.xhtml" fixed="top" inverse="true">
             <b:navbarLinks>
                 <b:navLink value="Manage Employees" href="modifyemployees.xhtml"/>
@@ -26,44 +34,68 @@
             </b:navbarLinks>
         </b:navBar>
         <b:container>
-        <h2>Hello manager!</h2>
-        <b:row>
-            #{highestRevenue.highestCustomer()}
-             #{highestRevenue.highestEmployee()}
-            <b:column span="5">
-                Welcome back to your control panel!
-                Please select your action from the toolbar above,
-                or take a look at the current revenue and flight stats!
-                A bit clueless? Don't forget about the <strong>Help Menu</strong>.
-            </b:column>
-            <b:column span="5">
-                <b:panel title="Big Money Records!" look="info">
-                    <h:panelGrid columns="2" cellpadding="5">
-                        <h:outputText value="Employee:"/>
-                        <h:outputText value=" "/>
-                        <h:outputText value="#{highestRevenue.employeeID}"/>
-                        <h:outputText value="#{highestRevenue.employeeRevenue}"/>
-                        <h:outputText value="Customer:"/>
-                        <h:outputText value=" "/>
-                        <h:outputText value="#{highestRevenue.custFirstName} #{highestRevenue.custLastName} "/>
-                        <h:outputText value=" #{highestRevenue.customerRevenue}"/>
-                    </h:panelGrid>
-                </b:panel>
-            </b:column>
-        </b:row>
-        
-        <b:row>
-            <b:column span="5">
-                <b:panel title="On-Time Flights!">
-                    
-                </b:panel>
-            </b:column>
-            <b:column span="5">
-                <b:panel title="Delayed Flights!">
-                    
-                </b:panel>
-            </b:column>
-        </b:row>
+            <h2>Hello manager!</h2>
+            <b:row>
+                #{highestRevenue.highestCustomer()}
+                #{highestRevenue.highestEmployee()}
+                <b:column span="5">
+                    Welcome back to your control panel!
+                    Please select your action from the toolbar above,
+                    or take a look at the current revenue and flight stats!
+                    A bit clueless? Don't forget about the <strong>Help Menu</strong>.
+                </b:column>
+                <b:column span="5">
+                    <b:panel title="Big Money Records!" look="info">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputText value="Employee:"/>
+                            <h:outputText value=" "/>
+                            <h:outputText value="#{highestRevenue.employeeID}"/>
+                            <h:outputText value="#{highestRevenue.employeeRevenue}"/>
+                            <h:outputText value="Customer:"/>
+                            <h:outputText value=" "/>
+                            <h:outputText value="#{highestRevenue.custFirstName} #{highestRevenue.custLastName} "/>
+                            <h:outputText value=" #{highestRevenue.customerRevenue}"/>
+                        </h:panelGrid>
+                    </b:panel>
+                </b:column>
+            </b:row>
+
+            <b:row>
+                <b:column span="5">
+                    <b:panel title="On-Time Flights!">
+                        #{flightList.onTimeFlights()}
+                        <b:container>
+                            <b:row>
+                                <b:column span="2">Airline ID</b:column>
+                                <b:column span="2">Flight Number</b:column>
+                            </b:row>
+                            <c:forEach items="#{flightList.flights}" var="s">
+                                <b:row>
+                                    <b:column span="2">#{s.airlineID}</b:column>
+                                    <b:column span="2">#{s.flightNo}</b:column>
+                                </b:row>
+                            </c:forEach>  
+                        </b:container>
+                    </b:panel>
+                </b:column>
+                <b:column span="5">
+                    <b:panel title="Delayed Flights!">
+                        #{flightList.delayedFlights()}
+                        <b:container>
+                            <b:row>
+                                <b:column span="2">Airline ID</b:column>
+                                <b:column span="2">Flight Number</b:column>
+                            </b:row>
+                            <c:forEach items="#{flightList.flights}" var="s">
+                                <b:row>
+                                    <b:column span="2">#{s.airlineID}</b:column>
+                                    <b:column span="2">#{s.flightNo}</b:column>
+                                </b:row>
+                            </c:forEach>  
+                        </b:container>
+                    </b:panel>
+                </b:column>
+            </b:row>
 
         </b:container>
     </h:body>

@@ -8,6 +8,13 @@
         <title>All Flights</title>
     </h:head>
     <h:body style="padding: 60px;">
+                <script type="text/javascript">
+
+                    if ("#{employeeList.loggedIn}" != "valid") {
+                window.location.replace("../home.xhtml");
+            }
+
+        </script>
 
         <b:navBar brand="Mayflower Travel" brandHref="ManagerPanel.xhtml" fixed="top" inverse="true">
             <b:navbarLinks>
