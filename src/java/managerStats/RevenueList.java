@@ -17,22 +17,19 @@ import javax.inject.Named;
 @Dependent
 public class RevenueList {
 
-    private ArrayList<Revenue> revenue = new ArrayList<Revenue>();
-    private int flightNum;
-    private String flightID;
-    private String city;
-    private String firstName;
-    private String lastName;
-    private int custNum;
-    private String input;
+    private static final ArrayList<Revenue> revenue = new ArrayList<Revenue>();
+    private static int flightNum;
+    private static String flightID;
+    private static String city;
+    private static String firstName;
+    private static String lastName;
+    private static int custNum;
+    private static String input;
 
     public ArrayList<Revenue> getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(ArrayList<Revenue> revenue) {
-        this.revenue = revenue;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -92,7 +89,7 @@ public class RevenueList {
     }
     
     public void flightRecord(){
-        revenue = new ArrayList<Revenue>();
+        revenue.removeAll(revenue);
         StringTokenizer st = new StringTokenizer(input);
 
         try {
@@ -141,7 +138,7 @@ public class RevenueList {
     }
     
     public void customerNumber(){
-        revenue = new ArrayList<Revenue>();
+        revenue.removeAll(revenue);
         custNum = Integer.parseInt(input);
 
         try {
@@ -184,7 +181,7 @@ public class RevenueList {
     }
     
     public void cityName(){
-        revenue = new ArrayList<Revenue>();
+        revenue.removeAll(revenue);
         city = input;
          try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -207,10 +204,11 @@ public class RevenueList {
                 sql = "SELECT DISTINCT R.ResrNo, R.TotalFare * 0.1 AS Revenue \n"
                         + "FROM Reservation R, Leg L, ResrFlightLastLeg LL, Airport A \n"
                         + "WHERE R.ResrNo = LL.ResrNo AND L.AirlineID = LL.AirlineID \n"
-                        + "AND L.FlightNo = LL.FlightNo AND L.LegNo = LL.L \n"
+                        + "AND L.FlightNo = LL.FlightNo AND L.LegNo = LL.LegNo \n"
                         + "AND L.ArrAirportID = A.ID AND A.City = ?"; 
-                ps.setString(1, city);
                 ps = con.prepareStatement(sql);
+                ps.setString(1, city);
+                System.out.println(ps);
                 ps.execute();
                 rs = ps.getResultSet();
                 while (rs.next()) {

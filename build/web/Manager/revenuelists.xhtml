@@ -26,32 +26,33 @@
             </b:navbarLinks>
         </b:navBar>
         <b:container>
-        <h2>Revenue per Flight, City, Customer</h2>
-        <h:form id="ID">
-            <b:inputText id="input" value="#{revenueList.input}">
-                <f:facet name="prepend">
-                    <b:commandButton value="Flight Number" action="#{revenueList.flightRecord()}"/>
-                    <b:commandButton value="City" action="#{revenueList.cityName()}"/>
-                    <b:commandButton value="Customer" action="#{revenueList.customerNumber()}"/>
-                </f:facet>
-            </b:inputText>
-        </h:form>
-        
-        <b:container>
-        <b:row>
-            <b:column span="2">Reservation#</b:column>
-            <b:column span="2">Revenue</b:column>
-        </b:row>
-        <b:row>
-            <c:forEach items="#{revenueList.revenue}" var="r">
-                <b:column span="1">#{r.resNum}</b:column>
-                <b:column span="1">#{r.revenue}</b:column>
-            </c:forEach>  
-        </b:row>
+            <h2>Revenue per Flight, City, Customer</h2>
+            <h:form id="ID">
+                <b:inputText id="input" value="#{revenueList.input}">
+                    <f:facet name="prepend">
+                        <b:commandButton value="Flight Number" action="#{revenueList.flightRecord()}"/>
+                        <b:commandButton value="City" action="#{revenueList.cityName()}"/>
+                        <b:commandButton value="Customer" action="#{revenueList.customerNumber()}"/>
+                    </f:facet>
+                </b:inputText>
+            </h:form>
+
+            <b:container>
+                <b:row>
+                    <b:column span="2">Reservation#</b:column>
+                    <b:column span="2">Revenue</b:column>
+                </b:row>
+                <c:forEach items="#{revenueList.revenue}" var="r">
+                    <b:row>
+                        <b:column span="1">#{r.resNum}</b:column>
+                        <b:column span="1">#{r.revenue}</b:column>
+                    </b:row>
+                </c:forEach>  
+
+            </b:container>
+
         </b:container>
-        
-        </b:container>
-        
+
     </h:body>
 </html>
 

@@ -13,13 +13,13 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class ReservationHistory {
 
-    private ArrayList<Reservation> reservations = new ArrayList<Reservation>();
-    private int flightNum;
-    private String flightID;
-    private int customerID;
-    private String firstName;
-    private String lastName;
-    private String textInput;
+    private static final ArrayList<Reservation> reservations = new ArrayList<Reservation>();
+    private static int flightNum;
+    private static String flightID;
+    private static int customerID;
+    private static String firstName;
+    private static String lastName;
+    private static String textInput;
 
     public ArrayList<Reservation> getReservations() {
         return reservations;
@@ -84,7 +84,7 @@ public class ReservationHistory {
     }
     
     public void flightRecord(){
-        reservations = new ArrayList<Reservation>();
+        reservations.removeAll(reservations);
         StringTokenizer st = new StringTokenizer(textInput);
        try {
         flightID = st.nextToken();
@@ -104,12 +104,13 @@ public class ReservationHistory {
             if (con != null) {
                 String sql = "SELECT DISTINCT R.ResrNo, R.ResrDate, R.TotalFare, R.BookingFee, \n"
                         + "R.RepSSN, P.FirstName, P.LastName \n"
-                        + " FROM Reservation R, Customer C, Person P \n"
+                        + " FROM Reservation R, Customer C, Person P, Includes I \n"
                         + " WHERE R.AccountNo = C.AccountNo AND C.Id = P.Id \n"
                         + " AND I.ResrNo = R.ResrNo AND I.AirlineID = ? AND I.FlightNo = ?";
                 ps = con.prepareStatement(sql);
                 ps.setString(1, flightID);
                 ps.setInt(2, flightNum);
+                System.out.println(ps);
                 ps.execute();
                 rs = ps.getResultSet();
                 while (rs.next()) {
@@ -134,7 +135,7 @@ public class ReservationHistory {
     }
     
     public void customerRecord(){
-        reservations = new ArrayList<Reservation>();
+        reservations.removeAll(reservations);
         StringTokenizer st = new StringTokenizer(textInput);
        try {
         firstName = st.nextToken();
@@ -160,6 +161,7 @@ public class ReservationHistory {
                 ps = con.prepareStatement(sql);
                 ps.setString(1, firstName);
                 ps.setString(2, lastName);
+                
                 ps.execute();
                 rs = ps.getResultSet();
                 while (rs.next()) {

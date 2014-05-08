@@ -47,17 +47,18 @@
             <b:column span="1">First Name</b:column>
             <b:column span="1">Last Name</b:column>
         </b:row>
-        <b:row>
             <c:forEach items="#{reshistory.reservations}" var="r">
+                <b:row>
                 <b:column span="1">#{r.resNum}</b:column>
-                <b:column span="1">fix me pls</b:column>
+                <b:column span="1">#{r.resDate}</b:column>
                 <b:column span="1">$#{r.totalFare}</b:column>
                 <b:column span="1">$#{r.bookingFee}</b:column>
                 <b:column span="1">#{r.repSSN}</b:column>
                 <b:column span="1">#{r.firstName}</b:column>
                 <b:column span="1">#{r.lastName}</b:column>
+                </b:row>
             </c:forEach>  
-        </b:row>
+
         </b:container>
 
         
