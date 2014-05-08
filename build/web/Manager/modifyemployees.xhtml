@@ -3,6 +3,7 @@
       xmlns:b="http://bootsfaces.net/ui"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>Modify Employee List</title>
@@ -28,30 +29,33 @@
         <b:container>
         <h2>Modify Employees</h2>
         #{employeeList.populateEmployees()}
+        <h:form>
+            <p:dataTable id="employee" var="e" value="#{employeeList.employees}" 
+                         selection="#{employeeList.selected}" rowKey="#{e.SSN}" selectionMode="single">
+
+                <f:facet name="header">
+                    Click "Add" button to Add an Employee<br />
+                    Click "Edit" button after selecting to edit Employees <br />
+                    Click "Delete" button after selecting to delete an Employee
+                </f:facet>
+
+                <p:column headerText="Employee SSN">
+                    #{e.SSN}
+                </p:column>
+
+                <p:column headerText="Employee Name">
+                    #{e.firstName} #{e.lastName}
+                </p:column>
+                
+                <f:facet name="footer">
+                    <p:commandButton id="editButton" value="Edit" action="editemployee" icon="ui-icon-pencil"/>
+                    <p:commandButton id="deleteButton" value="Delete" onclick="window.location.reload()" ajax="false" actionListener="#{employeeList.deleteEmployee()}" />
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+        
         <b:row>
-            <b:column span="2"><h3>SSN</h3></b:column>
-            <b:column span="3"><h3>Name</h3></b:column>
-        </b:row>
-        <c:forEach var="e" items="#{employeeList.employees}">
-            <b:row>
-                <b:column span="1">#{e.SSN}</b:column>
-                <b:column span="3">#{e.firstName} #{e.lastName}</b:column>
-                <b:column span="2">
-                <h:form>
-                    <b:buttonGroup>
-                        <b:commandButton value="Edit" look="info">
-                            <f:param name="#{employeeList.selection}" value="#{e.SSN}" /> 
-                        </b:commandButton>
-                        <b:commandButton value="Delete" look="danger">
-                            <f:param name="#{employeeList.selection}" value="#{e.SSN}" /> 
-                        </b:commandButton>
-                    </b:buttonGroup>
-                </h:form>
-            </b:column>
-            </b:row>
-        </c:forEach>
-        <b:row>
-            <b:column span="3"><h:form><b:button value="Add Employee"  look="success"  /></h:form></b:column>
+            <b:column span="3"><h:form><p:commandButton value="Add Employee" action="addEmployee"/></h:form></b:column>
         </b:row>
 
     </b:container>

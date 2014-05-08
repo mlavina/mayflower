@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:b="http://bootsfaces.net/ui"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Edit Employee</title>
@@ -26,21 +27,23 @@
         </b:navBar>
         <b:container>
             <h2>Edit Employee</h2>
-        <b:panel title="FIRSTNAME LASTNAME" look="info">
+            <b:panel title="#{employeeList.selected.firstName} #{employeeList.selected.lastName}" look="info">
         <h:form id="editEmployee">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputText value="SSN: "/>
-                <b:inputText id="id" value="#{employeeList.ssn}" />
+                <h:outputText id="id" value="#{employeeList.selected.SSN}" />
                 <h:outputText value="Manager Status: "/>
-                <b:inputText id="manager" value="#{employee.isManager}" />
+                <b:inputText id="manager" value="#{employeeList.selected.manager}" />
                 <h:outputText value="Start Date: "/>
-                <b:inputText id="date" value="#{employee.startDate}" />
+                <p:calendar id="date" value="#{employeeList.selected.startDate}" />
                 <h:outputText value="Hourly Rate: "/>
-                <b:inputText id="rate" value="#{employee.hourlyRate}">
+                <b:inputText id="rate" value="#{employeeList.selected.hourlyRate}">
+               
                     <f:facet name="prepend">
                         <h:outputText value="$" />
                     </f:facet>
                 </b:inputText>
+                 <!--
                 <h:outputText value="First Name: "/>
                 <b:inputText id="firstName" value="#{employee.firstName}" />
                 <h:outputText value="Last Name: "/>
@@ -48,17 +51,17 @@
                 <h:outputText value="Address: "/>
                 <b:inputText id="address" value="#{employee.address}"/>
                 <h:outputText value="City: "/>
-                <b:inputText id="city" />
+                <b:inputText id="city" value=""/>
                 <h:outputText value="State: "/>
                 <b:inputText id="state" />
                 <h:outputText value="Zip Code: "/>
-                <b:inputText id="zip" />
+                <b:inputText id="zip" />-->
             </h:panelGrid>
 
 
 
             <b:row>
-                <b:column><b:commandButton value="Submit" look="success"/></b:column>
+                <b:column><b:commandButton value="Submit" actionListener="#{employeeList.editEmployee()}" look="success"/></b:column>
             </b:row>
 
         </h:form>

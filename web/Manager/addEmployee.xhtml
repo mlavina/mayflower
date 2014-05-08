@@ -27,41 +27,37 @@
         </b:navBar>
         <b:container>
             <h2>Edit Employee</h2>
-            <b:panel title="#{employeeList.selected.firstName} #{employeeList.selected.lastName}" look="info">
-        <h:form id="editEmployee">
+        <b:panel title="FIRSTNAME LASTNAME" look="info">
+        <h:form id="addEmployee">
             <h:panelGrid columns="2" cellpadding="5">
-                <h:outputText value="SSN: "/>
-                <h:outputText id="id" value="#{employeeList.selected.SSN}" />
                 <h:outputText value="Manager Status: "/>
-                <b:inputText id="manager" value="#{employeeList.selected.manager}" />
+                <b:inputText id="manager" value="#{employeeList.manager}" />
                 <h:outputText value="Start Date: "/>
-                <p:calendar id="date" value="#{employeeList.selected.startDate}" />
+                <p:calendar id="date" value="#{employeeList.startDate}" />
                 <h:outputText value="Hourly Rate: "/>
-                <b:inputText id="rate" value="#{employeeList.selected.hourlyRate}">
-               
+                <b:inputText id="rate" value="#{employeeList.hourlyRate}">
                     <f:facet name="prepend">
                         <h:outputText value="$" />
                     </f:facet>
                 </b:inputText>
-                 <!--
                 <h:outputText value="First Name: "/>
-                <b:inputText id="firstName" value="#{employee.firstName}" />
+                <b:inputText id="firstName" value="#{employeeList.firstName}" />
                 <h:outputText value="Last Name: "/>
-                <b:inputText id="lastName" value="#{employee.lastName}"/>
+                <b:inputText id="lastName" value="#{employeeList.lastName}"/>
                 <h:outputText value="Address: "/>
-                <b:inputText id="address" value="#{employee.address}"/>
+                <b:inputText id="address" value="#{employeeList.address}"/>
                 <h:outputText value="City: "/>
-                <b:inputText id="city" value=""/>
+                <b:inputText id="city" value ="#{employeeList.city}"/>
                 <h:outputText value="State: "/>
-                <b:inputText id="state" />
+                <b:inputText id="state" value="#{employeeList.state}" />
                 <h:outputText value="Zip Code: "/>
-                <b:inputText id="zip" />-->
+                <b:inputText id="zip" value="#{employeeList.zip}"/>
             </h:panelGrid>
 
 
 
             <b:row>
-                <b:column><b:commandButton value="Submit" actionListener="#{employeeList.editEmployee()}" look="success"/></b:column>
+                <b:column><b:commandButton value="Submit" action="ManagerPanel?faces-redirect=true" actionListener="#{employeeList.addEmployee()}" look="success"/></b:column>
             </b:row>
 
         </h:form>

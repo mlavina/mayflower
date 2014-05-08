@@ -27,6 +27,8 @@
         <b:container>
         <h2>Hello manager!</h2>
         <b:row>
+            #{highestRevenue.highestCustomer()}
+             #{highestRevenue.highestEmployee()}
             <b:column span="5">
                 Welcome back to your control panel!
                 Please select your action from the toolbar above,
@@ -42,8 +44,8 @@
                         <h:outputText value="#{highestRevenue.employeeRevenue}"/>
                         <h:outputText value="Customer:"/>
                         <h:outputText value=" "/>
-                        <h:outputText value="#{highestRevenue.custFirstName} #{highestRevenue.custLastName}"/>
-                        <h:outputText value="#{highestRevenue.customerRevenue}"/>
+                        <h:outputText value="#{highestRevenue.custFirstName} #{highestRevenue.custLastName} "/>
+                        <h:outputText value=" #{highestRevenue.customerRevenue}"/>
                     </h:panelGrid>
                 </b:panel>
             </b:column>

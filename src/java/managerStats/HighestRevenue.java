@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package managerStats;
 
 import java.sql.Connection;
@@ -21,13 +20,13 @@ import javax.enterprise.context.Dependent;
 @Named(value = "highestRevenue")
 @Dependent
 public class HighestRevenue {
-    
-    private String custFirstName;
-    private String custLastName;
-    private int customerID;
-    private int employeeID;
-    private double customerRevenue;
-    private double employeeRevenue;
+
+    private static String custFirstName;
+    private static String custLastName;
+    private static int customerID;
+    private static int employeeID;
+    private static double customerRevenue;
+    private static double employeeRevenue;
 
     /**
      * Creates a new instance of HighestRevenue
@@ -51,8 +50,6 @@ public class HighestRevenue {
         this.custLastName = custLastName;
     }
 
-    
-    
     public int getCustomerID() {
         return customerID;
     }
@@ -84,12 +81,11 @@ public class HighestRevenue {
     public void setEmployeeRevenue(double employeeRevenue) {
         this.employeeRevenue = employeeRevenue;
     }
-    
-    public void highestEmployee(){
+
+    public void highestEmployee() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             /* uh oh no driver! */ }
         PreparedStatement ps = null;
         Connection con = null;
@@ -99,74 +95,81 @@ public class HighestRevenue {
             if (con != null) {
                 String sql = "CREATE OR REPLACE VIEW CRRevenue(SSN, TotalRevenue) \n"
                         + "AS \n"
-                        + "SELECT RepSSN, SUM(TotalFare * 0.1) \n"
-                        + " FROM Reservation GROUP BY RepSSN";
+                        + "SELECT RepSSN, SUM(TotalFare * 0.1) \n" 
+                        +" FROM Reservation WHERE RepSSN <> 0 GROUP BY RepSSN ;";
+
                 ps = con.prepareStatement(sql);
                 ps.execute();
+                
                 sql = "SELECT SSN, TotalRevenue FROM CRRevenue \n"
-                    + "WHERE TotalRevenue >= (SELECT MAX(TotalRevenue) FROM CRRevenue)";
+                        + "WHERE TotalRevenue >= (SELECT MAX(TotalRevenue) FROM CRRevenue)";
                 ps = con.prepareStatement(sql);
                 ps.execute();
+                
+                
                 rs = ps.getResultSet();
-                employeeID = rs.getInt("SSN");
-                employeeRevenue = rs.getDouble("TotalRevenue");
+                if (rs.next()) {
+                    employeeID = rs.getInt("SSN");
+                    employeeRevenue = rs.getDouble("TotalRevenue");
+                }
             }
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
-        } 
-        finally {
+        } finally {
             try {
                 con.close();
                 ps.close();
-            } 
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } 
-        
+        }
+
     }
-    
-    public void highestCustomer(){
-        try { 
+
+    public void highestCustomer() {
+        try {
             Class.forName("com.mysql.jdbc.Driver");
-        } 
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             //return "ISSUE WITH DATABASE DRIVER!";
         }
-        
+
         try {
             PreparedStatement ps;
             Connection con;
             ResultSet rs;
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
-                String sql = "CREATE OR REPLACE VIEW CustomerRevenue(AccountNo, TotalRevenue) \n"+
-                    "AS \n"+
-                    "SELECT AccountNo, SUM(TotalFare * 0.1) \n"+
-                    "FROM Reservation \n"+
-                    "GROUP BY AccountNo";
+                String sql = "CREATE OR REPLACE VIEW CustomerRevenue(AccountNo, TotalRevenue) \n"
+                        + "AS \n"
+                        + "SELECT AccountNo, SUM(TotalFare * 0.1) \n"
+                        + "FROM Reservation \n"
+                        + "GROUP BY AccountNo";
                 ps = con.prepareStatement(sql);
-                ps.executeQuery();
-                sql = "SELECT CCR.TotalRevenue, R.AccountNo, P.FirstName, P.LastName \n"+
-                    "FROM CustomerRevenue CR, Customer C, Person P \n"+
-                    "WHERE CR.AccountNo = C.AccountNo AND C.Id = P.Id \n"+
-                    "AND CR.TotalRevenue >= (SELECT MAX(TotalRevenue) FROM CustomerRevenue)";
+                ps.execute();
+         
+                
+                sql = "SELECT CR.TotalRevenue, CR.AccountNo, P.FirstName, P.LastName \n"
+                        + "FROM CustomerRevenue CR, Customer C, Person P \n"
+                        + "WHERE CR.AccountNo = C.AccountNo AND C.Id = P.Id \n"
+                        + "AND CR.TotalRevenue >= (SELECT MAX(TotalRevenue) FROM CustomerRevenue)";
                 ps = con.prepareStatement(sql);
-                ps.executeQuery();
+                ps.execute();
+
+                
                 rs = ps.getResultSet();
-                customerRevenue = rs.getDouble("TotalRevenue");
-                customerID = rs.getInt("AccountNo");
-                custLastName = rs.getString("LastName");
-                custFirstName = rs.getString("FirstName");
+                if (rs.next()) {
+                    this.customerRevenue = rs.getDouble("TotalRevenue");
+                    this.customerID = rs.getInt("AccountNo");
+                    this.custLastName = rs.getString("LastName");
+                    this.custFirstName = rs.getString("FirstName");
+                }
             }
-            
-        }
-        catch(SQLException sqle){
+
+        } catch (SQLException sqle) {
             //return "ISSUE WITH DATABASE TRANSACTION!";
+            System.out.println("ISSUE WITH DATABASE TRANSACTION");
+            System.out.println(sqle);
         }
     }
 
 }
-
-
